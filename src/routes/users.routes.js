@@ -4,7 +4,16 @@ const UsersController = require("../controllers/UsersController");
 
 const usersRoutes = Router();
 
+function myMiddleware(request, response, next){
+  console.log('Voce passou pelo middleWare');
+  console.log(request.body);
 
+  if(!request.body.isAdmin) {
+    return response.json({message: " User unauthorized "})
+  }
+
+  next();
+}
 
 
 
@@ -13,6 +22,6 @@ const usersRoutes = Router();
 const usersController = new UsersController()
 
 
-usersRoutes.post("/", usersController.create)
+usersRoutes.post("/", myMiddleware, usersController.create)
 
 module.exports = usersRoutes;
