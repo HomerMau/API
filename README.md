@@ -1,3 +1,3 @@
 # API
  
-## Uma API de CRUD em JavaScript
+## Uma API para o acesso do site RocketNotes
