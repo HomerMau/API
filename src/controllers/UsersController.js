@@ -6,6 +6,8 @@ const sqliteConnection = require("../database/sqlite")
 
 const UserRepository = require("../repositories/UserRepository");
 
+const UserCreateService = require("../services/UserCreateService")
+
 class UsersController {
   // index - GET Para listar vários registros.
   // show - GET para exibir um registro especifico.
@@ -16,17 +18,9 @@ class UsersController {
   async create(request, response) {
     const { name, email, password } = request.body
 
-    const UserRepository = new UserRepository();
-
-    const checkUserExists = await UserRepository.findByEmail(email);
-
-    if (checkUserExists) {
-      throw new AppError("Este e-mail já está em uso.")
-    }
-
-    const hashedPassword = await hash(password, 8)
-
-    await UserRepository.create({name, email, password: hashedPassword})
+    const userRepository = new UserRepository();
+    const userCreateService = new UserCreateService(userRepository);
+    await userCreateService.execute({ name, email, password });
 
     return response.status(201).json()
   }
